@@ -6,8 +6,10 @@ class AppTheme {
   const AppTheme._();
 
   static ThemeData lightTheme = ThemeData(
-      indicatorColor: LightThemeColor.accent
+      indicatorColor: LightThemeColor.light
   );
 
-  static ThemeData darkTheme = ThemeData();
+  static ThemeData darkTheme = ThemeData(
+      indicatorColor: LightThemeColor.yellow
+  );
 }
