@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:language_learning_flutte/screens/class_screen.dart';
+import 'package:language_learning_flutte/data/app_data.dart';
+import 'package:language_learning_flutte/data/models/lesson.dart';
+import 'package:language_learning_flutte/screens/task_screen.dart';
 
-class LessonsScreen extends StatelessWidget {
+class LessonsScreen extends StatefulWidget {
   const LessonsScreen({Key? key}) : super(key: key);
 
+  @override
+  State<LessonsScreen> createState() => _LessonsScreenState();
+}
+
+class _LessonsScreenState extends State<LessonsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,57 +23,40 @@ class LessonsScreen extends StatelessWidget {
           ),
         ),
         leading: IconButton(
-          icon: Icon(Icons.notification_add, color: Colors.black),
+          icon: const Icon(Icons.notification_add, color: Colors.black),
           onPressed: () {},
         ),
         toolbarHeight: 80.2,
-        toolbarOpacity: 0.8,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            bottomRight: Radius.circular(25),
-            bottomLeft: Radius.circular(25),
-          ),
-        ),
-        elevation: 0.00,
         backgroundColor: const Color(0xFFfedbdf),
       ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _buildLessonColumn(context, "Основы", "Фрукты", "Животные"),
-              SizedBox(width: 20),
-              _buildLessonColumn(context, "Семья", "Овощи"),
-            ],
+      body: Padding(
+        padding: const EdgeInsets.only(top: 20),
+        child: SingleChildScrollView(
+          child: ListView.builder(
+            itemCount: AppData.lessonItems.length,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              return Column(
+                children: [
+                  _buildLessonContainer(context, AppData.lessonItems[index]),
+                  const SizedBox(height: 30),
+                ],
+              );
+            },
           ),
         ),
       ),
     );
   }
 
-  Widget _buildLessonColumn(BuildContext context, String lesson1, String lesson2, [String? lesson3]) {
-    return Column(
-      children: [
-        SizedBox(height: 30,),
-        _buildLessonContainer(context, lesson1),
-        SizedBox(height: 80),
-        _buildLessonContainer(context, lesson2),
-        if (lesson3 != null) ...[
-          SizedBox(height: 80),
-          _buildLessonContainer(context, lesson3),
-        ],
-      ],
-    );
-  }
-
-  Widget _buildLessonContainer(BuildContext context, String lessonName) {
+  Widget _buildLessonContainer(BuildContext context, Lesson lesson) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ClassScreen(),
+            builder: (context) => TaskScreen(lesson: lesson),
           ),
         );
       },
@@ -75,13 +65,13 @@ class LessonsScreen extends StatelessWidget {
         height: 150,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: Border.all(color: Color(0xFF9eb4b2), width: 4),
+          border: Border.all(color: const Color(0xFF9eb4b2), width: 4),
         ),
         child: Center(
           child: Text(
-            lessonName,
+            lesson.name,
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.black, fontStyle: FontStyle.italic, fontSize: 18),
+            style: const TextStyle(color: Colors.black, fontStyle: FontStyle.italic, fontSize: 18),
           ),
         ),
       ),
